@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "declaration": true,
+    "module": "CommonJS",
+    "outDir": "./dist",
+    "strict": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@src/*": ["src/*"]
+    }
+  },
+  "include": [
+    "src",
+    "src/types/index.ts"
+  ],
+  "exclude": ["node_modules"]
+}
