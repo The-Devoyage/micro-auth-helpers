@@ -1,24 +1,19 @@
-import { Request } from 'express';
-import { Context, DecodedToken } from 'src/types';
+import { Request } from "express";
+import { Context } from "src/types";
 
 export const GenerateContext = (params: {
   req: Request;
-  custom?: Record<string, any>;
+  inject?: Record<string, any>;
 }): Context => {
-  const { req, custom } = params;
+  const { req, inject } = params;
 
-  const tokenHeader = req.get('token');
-  const isAuthHeader = req.get('isauth');
+  const contextHeader = req.get("context");
 
-  let decodedToken: DecodedToken = {};
-  let isAuth: boolean = false;
+  let context: Context = { auth: { isAuth: false } };
 
-  if (tokenHeader) {
-    decodedToken = JSON.parse(tokenHeader);
-  }
-  if (isAuthHeader) {
-    isAuth = JSON.parse(isAuthHeader);
+  if (contextHeader) {
+    context = JSON.parse(contextHeader);
   }
 
-  return { auth: { decodedToken, isAuth }, ...custom };
+  return { ...context, ...inject };
 };

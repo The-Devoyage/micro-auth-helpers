@@ -1,4 +1,4 @@
-import { Context } from 'src/types';
+import { Context } from "src/types";
 
 export const CheckAuth = (options: {
   context: Context;
@@ -8,11 +8,11 @@ export const CheckAuth = (options: {
   const { context, requireUser, errorMessage } = options;
 
   if (!context.auth.isAuth)
-    throw new Error(errorMessage ?? 'Not Authenticated');
+    throw new Error(errorMessage ?? "Not Authenticated");
 
   if (requireUser && context.auth.decodedToken) {
-    if (!('user' in context.auth.decodedToken)) {
-      throw new Error(errorMessage ?? 'Requires User Authentiction');
+    if (!("user" in context.auth.decodedToken)) {
+      throw new Error(errorMessage ?? "Requires User Authentiction");
     }
   }
 };
