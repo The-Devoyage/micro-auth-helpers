@@ -24,7 +24,7 @@ Helper functions to use within the Gateway Service.
 
 **Generate Context**
 
-Creates context at the gateway level based on the incoming request headers.
+Creates context at the gateway level based on the incoming request headers or custom "injected" (see below) data.
 
 By default, no headers are included. Instruct `GenerateContext` to include headers by passing header keys in the `headers` array.
 
@@ -51,6 +51,7 @@ async function startServer() {
         req,
         secretOrPublicKey: process.env.JWT_ENCRYPTION_KEY,
         headers: ["Authorization", "Content-Type", "Custom_Header"],
+        inject: { customKey: customContext }
       });
     },
   });

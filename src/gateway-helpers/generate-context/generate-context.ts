@@ -6,10 +6,11 @@ export const GenerateContext = async (params: {
   req: Request;
   secretOrPublicKey?: jwt.Secret;
   headers: string[];
+  inject?: Record<string, any>;
 }): Promise<Context> => {
-  const { req, secretOrPublicKey, headers } = params;
+  const { req, secretOrPublicKey, headers, inject } = params;
 
-  const context: Context = { auth: { isAuth: false } };
+  const context: Context = { auth: { isAuth: false }, ...inject };
 
   if (headers.length) {
     for (const headerKey of headers) {
