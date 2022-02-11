@@ -98,9 +98,9 @@ const gateway = new ApolloGateway({
 });
 ```
 
-### Service Helpers
+### Subgraph Helpers
 
-Helper Functions to use within federated micro-services.
+Helper Functions to use within federated micro-services/subgraphs.
 
 **Generate Context**
 
