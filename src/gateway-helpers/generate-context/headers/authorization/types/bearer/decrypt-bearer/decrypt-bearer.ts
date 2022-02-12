@@ -5,7 +5,7 @@ export const DecryptBearer = (params: {
   authHeader: string;
   context: Context;
   secretOrPublicKey?: jwt.Secret;
-}) => {
+}): Context => {
   const { authHeader, secretOrPublicKey, context } = params;
 
   if (!authHeader) return context;

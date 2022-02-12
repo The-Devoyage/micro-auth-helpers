@@ -20,15 +20,15 @@ npm i @the-devoyage/micro-auth-helpers
 
 ### Gateway Helpers
 
-Helper functions to use within the Gateway Service.
+Helper functions to use within a Gateway Service.
 
-**Generate Context**
+**Generate Gateway Context**
 
-Creates context at the gateway level based on the incoming request headers or custom "injected" (see below) data.
+Creates context at the gateway level based on the incoming request headers or custom "injected" data.
 
-By default, no headers are included. Instruct `GenerateContext` to include headers by passing header keys in the `headers` array.
+By default, no headers are included. Instruct the `GenerateContext` function to include headers by passing header keys in the `headers` array.
 
-`Authorization` headers are assumed to be JSON web tokens and are automatically decoded -- if the secretOrPublicKey is provided. For example: `Authorization: Bearer ${token}`
+`Authorization` headers that are `Bearer` tokens are automatically decoded -- if the secretOrPublicKey is provided. For example: `Authorization: Bearer ${token}`. All other `Authorization` headers are simply added to context.
 
 ```ts
 import { Helpers } from "@the-devoyage/micro-auth-helpers";
@@ -64,7 +64,7 @@ startServer();
 app.listen(port, () => console.log(`GATEWAY ====> UP ON PORT ${port}`));
 ```
 
-The generate function returns type `Context` to be passed to external services. It always includes the `auth` context in addition to any other headers that you have instructed it to provide.
+The `GenerateContext` function returns type `Context` to be passed to external subgraphs. It always include `auth` context in addition to any other headers that you have instructed it to provide and data that has been "injected".
 
 ```ts
 export interface Context extends Record<string, any> {
@@ -72,20 +72,20 @@ export interface Context extends Record<string, any> {
 }
 
 export interface AuthContext {
-  decodedToken?: DecodedToken;
+  decodedToken?: Payload;
   isAuth: boolean;
   error?: string;
 }
 
-export interface DecodedToken extends jwt.JwtPayload {
-  account?: { _id: string; email: string };
-  user?: { _id: string; role: number; email: string };
+export interface Payload extends jwt.JwtPayload {
+  account: { _id: string; email: string } | null;
+  user: { _id: string; role: number; email: string } | null;
 }
 ```
 
 **Context Data Source**
 
-The `ContextDataSource` function is used to stringify and pass the Gateway `Context` to the external micro services.
+The `ContextDataSource` function is used to stringify and pass the Gateway `Context` to the external subgraphs.
 
 File Upload support is also built in. The `ContextDataSource` extends the `FileUploadDataSource` provided by `@profusion/apollo-federation-upload`.
 
@@ -110,7 +110,7 @@ In addition to Gateway Context Generation, this package provides a function to u
 ```ts
 const apolloServer = new ApolloServer({
   schema: schema,
-  context: ({ req }) => Helpers.Service.GenerateContext({ req }),
+  context: ({ req }) => Helpers.Subgraph.GenerateContext({ req }),
 });
 ```
 
@@ -120,7 +120,7 @@ At this point, additional "service specific" context can be injected, allowing t
 const apolloServer = new ApolloServer({
   schema: schema,
   context: ({ req }) =>
-    Helpers.Service.GenerateContext({
+    Helpers.Subgraph.GenerateContext({
       req,
       inject: { dogName: "Bongo", catName: "Oakley" },
     }),
@@ -145,7 +145,7 @@ Functions to use at the resolver level of the federated service.
 
 **CheckAuth**
 
-Uses the `Context` provided by this package to limit resolver capabilities.
+Uses the `Context` provided by this package to limit resolver capabilities. This checks the `context.auth.isAuth` property to see if the request has been authenticated.
 
 ```ts
 import { Helpers } from "@the-devoyage/micro-auth-helpers";
@@ -159,19 +159,23 @@ const resolvers = {
 };
 ```
 
-The `Context` object has two levels of identification and authorization including `Account` and `User`.
+The `context.auth` object has two levels of identification and authorization including `Account` and `User`.
 
 ```ts
-export interface DecodedToken extends jwt.JwtPayload {
-  account?: { _id: string; email: string };
-  user?: { _id: string; role: number; email: string };
+export interface Payload extends jwt.JwtPayload {
+  account: { _id: string; email: string } | null;
+  user: { _id: string; role: number; email: string } | null;
 }
 ```
 
-Provide the `requireUser` option to the `CheckAuth` function to require a user object to be present. If this is not present, only the `context.auth.isAuth` is needed to pass authentication.
+Provide the `requireUser` or the `requireAccount` option to the `CheckAuth` function to require a user or account object to be present. If this is not present, only the `context.auth.isAuth` is needed to pass authentication.
 
 ```ts
-Helpers.Resolver.CheckAuth({ context, requireUser: true });
+Helpers.Resolver.CheckAuth({
+  context,
+  requireUser: true,
+  requireAccount: true,
+});
 ```
 
 Pass custom error messages to override the default message if the `CheckAuth` function fails.
@@ -185,11 +189,11 @@ Helpers.Resolver.CheckAuth({
 
 **Limit Role**
 
-Limit the API at a resolver level based on the user's role. All roles are numbers.
+Limit the API at a resolver level based on the user's role. All roles are of type number/int. Lower roles have higher permissions.
 
 ```ts
 Helpers.Resolver.LimitRole({
-  userRole: context.auth.user.role,
+  userRole: context.auth.user.role, // 10
   roleLimit: 1,
   errorMessage:
     "This is an optional error message, but you have been declined based on your role.",
@@ -198,7 +202,7 @@ Helpers.Resolver.LimitRole({
 
 **Create Activation Token**
 
-This helper function creates an object of type `Activation` that can be saved to a database for custom validation. This uses dayjs under the hood.
+This helper function creates an object of type `Activation` that can be saved to a database for custom validation. This uses dayjs to set the limit.
 
 ```ts
 Helpers.Resolver.CreateActivationCode({
@@ -211,7 +215,7 @@ Helpers.Resolver.CreateActivationCode({
 
 ```ts
 export type Activation = {
-  code?: Maybe<Scalars["String"]>;
+  code: string;
   limit: Scalars["DateTime"];
   verified: Scalars["Boolean"];
 };
@@ -224,9 +228,10 @@ Use the `GenerateToken` function to generate a typed token that matches the typi
 ```ts
 const token = Helpers.Resolver.GenerateToken({
   secretOrPublicKey: process.env.JWT_ENCRYPTION_KEY,
-  decodedToken: {
+  payload: {
     account: { _id: account._id, email: account.email },
     user: { _id: user._id, email: user.email, role: user.role },
+    myCustomStuff: { include: "what you like" },
   },
   options: { expiresIn: "10h" },
 });

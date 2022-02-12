@@ -23,8 +23,10 @@ export const ParseAuthorization = (
       authHeader,
       secretOrPublicKey,
       context,
-    }).context;
+    });
+
     return { context, authHeader: { header: authHeader, type: "BEARER" } };
   }
+
   return { context };
 };
