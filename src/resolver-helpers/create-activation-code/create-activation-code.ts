@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 
 export const CreateActivationCode = (params: {
   codeLength: number;
@@ -9,7 +9,7 @@ export const CreateActivationCode = (params: {
   const activationCode = Math.floor(start + Math.random() * 9 * start);
   const activationLimit = dayjs().add(
     codeLimit?.value ?? 1,
-    codeLimit?.unit ?? 'h'
+    codeLimit?.unit ?? "h"
   );
   return {
     code: activationCode.toString(),

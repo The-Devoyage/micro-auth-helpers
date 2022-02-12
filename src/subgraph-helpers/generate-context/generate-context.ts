@@ -9,7 +9,9 @@ export const GenerateContext = (params: {
 
   const contextHeader = req.get("context");
 
-  let context: Context = { auth: { isAuth: false } };
+  let context: Context = {
+    auth: { isAuth: false, payload: { account: null, user: null } },
+  };
 
   if (contextHeader) {
     context = JSON.parse(contextHeader);

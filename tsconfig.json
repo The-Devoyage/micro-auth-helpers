@@ -9,11 +9,13 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
+    "sourceMap": true,
     "paths": {
       "@src/*": ["src/*"]
     }
   },
+  
   "include": [
     "src",
     "src/types/index.ts"

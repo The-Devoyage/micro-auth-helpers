@@ -1,14 +1,14 @@
-import { DecodedToken } from "@src/types";
+import { Payload } from "@src/types";
 import jwt from "jsonwebtoken";
 
 export const GenerateToken = (params: {
-  decodedToken: DecodedToken;
+  payload: Payload;
   secretOrPublicKey: jwt.Secret;
   options?: jwt.SignOptions;
 }) => {
-  const { decodedToken, secretOrPublicKey, options } = params;
+  const { payload, secretOrPublicKey, options } = params;
 
-  const token = jwt.sign(decodedToken, secretOrPublicKey, options);
+  const token = jwt.sign(payload, secretOrPublicKey, options);
 
   return token;
 };

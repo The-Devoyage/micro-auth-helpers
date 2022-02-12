@@ -51,7 +51,7 @@ async function startServer() {
         req,
         secretOrPublicKey: process.env.JWT_ENCRYPTION_KEY,
         headers: ["Authorization", "Content-Type", "Custom_Header"],
-        inject: { customKey: customContext }
+        inject: { customKey: customContext },
       });
     },
   });
@@ -206,5 +206,28 @@ Helpers.Resolver.CreateActivationCode({
   codeLimit: { value: 6, unit: "hours" },
   //codeLimit: { value: 4, unit "h" },
   //codeLimit: { value: 1, unit "day" }
+});
+```
+
+```ts
+export type Activation = {
+  code?: Maybe<Scalars["String"]>;
+  limit: Scalars["DateTime"];
+  verified: Scalars["Boolean"];
+};
+```
+
+**Generate Token**
+
+Use the `GenerateToken` function to generate a typed token that matches the typings of `DecodedToken`.
+
+```ts
+const token = Helpers.Resolver.GenerateToken({
+  secretOrPublicKey: process.env.JWT_ENCRYPTION_KEY,
+  decodedToken: {
+    account: { _id: account._id, email: account.email },
+    user: { _id: user._id, email: user.email, role: user.role },
+  },
+  options: { expiresIn: "10h" },
 });
 ```
