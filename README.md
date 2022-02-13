@@ -223,7 +223,7 @@ export type Activation = {
 
 **Generate Token**
 
-Use the `GenerateToken` function to generate a typed token that matches the typings of `DecodedToken`.
+Use the `GenerateToken` function to generate a typed token that matches the typings of `Payload` from above.
 
 ```ts
 const token = Helpers.Resolver.GenerateToken({
