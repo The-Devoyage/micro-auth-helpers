@@ -24,9 +24,29 @@ npm i @the-devoyage/micro-auth-helpers
 
 ## Usage
 
-### Gateway Helpers
+Use the helpers throughout a federated architecture as such:
 
-Helper functions to use within a Gateway Service.
+1. A subgraph/service should generate and issue a JWT/token using the `Helpers.Resolver.GenerateToken()` helper.
+
+2. Prep the gateway to receive, decode, and parse the token using the `Helpers.Gateway.GenerateContext()` helper.
+
+3. Allow the gateway to share the context with external subgraph services using the `Helpers.Gateway.ContextDataSource()` helper.
+
+4. Prep the subgraph services to receive and parse the context using the `Helpers.Subgraph.GenerateContext()` function.
+
+5. Use the Resolver Helpers to Check Auth, Limit Role, and more within the resolvers of the subgraph.
+
+6. Send a request to the gateway with the token inside an `Authorization` header:
+
+```bash
+Authorization: Bearer ${TOKEN}
+```
+
+Follow the guide [here](https://blog.devgenius.io/apollo-federation-how-do-request-travel-through-a-federated-architecture-e4a4da54f46d) for more examples!
+
+## Helpers
+
+### Gateway Helpers
 
 **Generate Gateway Context**
 
