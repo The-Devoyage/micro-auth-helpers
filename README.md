@@ -1,13 +1,19 @@
 # The Devoyage - Micro Auth Helpers
 
-A collection of functions to make life easier when dealing with authentication and authorization within a Federated Apollo Microservice Architecture.
+A collection of functions to make life easier when dealing with authentication, authorization, context routing, file uploads and more within a Federated Apollo Microservice Architecture.
 
 ## Install
 
-Log into github.
+Log into the Github Registry
 
 ```
 npm login --registry=https://npm.pkg.github.com
+```
+
+Add the scope to your .npmrc file, run the following command from the root of the project.
+
+```
+echo @the-devoyage:--regitry=https://npm.pkg.github.com >> .npmrc
 ```
 
 Install
