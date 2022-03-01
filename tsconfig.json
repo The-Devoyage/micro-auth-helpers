@@ -10,10 +10,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
-    "sourceMap": true,
-    "paths": {
-      "@src/*": ["src/*"]
-    }
+    "sourceMap": true
   },
   
   "include": [

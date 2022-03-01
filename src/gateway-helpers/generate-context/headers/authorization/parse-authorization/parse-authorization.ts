@@ -1,4 +1,4 @@
-import { Context, ParseAuthorizationParms } from "@src/types";
+import { Context, ParseAuthorizationParms } from "../../../../../types";
 import jwt from "jsonwebtoken";
 import { Headers } from "../../headers";
 
@@ -12,7 +12,8 @@ export const ParseAuthorization = (
     secretOrPublicKey?: jwt.Secret;
   };
 } => {
-  let { context, req, secretOrPublicKey } = params;
+  let { context } = params;
+  const { req, secretOrPublicKey } = params;
 
   const authHeader = req.get("Authorization");
 

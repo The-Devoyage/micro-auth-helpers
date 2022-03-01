@@ -1,4 +1,4 @@
-import { Context, Payload } from "@src/types";
+import { Context, Payload } from "../../../../../../../types";
 import jwt from "jsonwebtoken";
 
 export const DecryptBearer = (params: {

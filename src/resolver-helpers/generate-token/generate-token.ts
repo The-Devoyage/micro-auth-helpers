@@ -1,4 +1,4 @@
-import { Payload } from "@src/types";
+import { Payload } from "../../types";
 import jwt from "jsonwebtoken";
 
 export const GenerateToken = (params: {

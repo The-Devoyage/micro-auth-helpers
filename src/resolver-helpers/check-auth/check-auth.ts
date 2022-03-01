@@ -1,4 +1,5 @@
-import { Context } from "src/types";
+import { Context } from "../../types";
+import { ApolloError } from "apollo-server-errors";
 
 export const CheckAuth = (options: {
   context: Context;
@@ -9,17 +10,26 @@ export const CheckAuth = (options: {
   const { context, requireUser, errorMessage, requireAccount } = options;
 
   if (!context.auth.isAuth)
-    throw new Error(errorMessage ?? "Not Authenticated");
+    throw new ApolloError(
+      errorMessage ?? "Not Authenticated",
+      "UNAUTHENTICATED"
+    );
 
   if (requireAccount && context.auth.payload) {
     if (!("account" in context.auth.payload)) {
-      throw new Error(errorMessage ?? "Requires Account.");
+      throw new ApolloError(
+        errorMessage ?? "Requires Account.",
+        "UNAUTHORIZED"
+      );
     }
   }
 
   if (requireUser && context.auth.payload) {
     if (!("user" in context.auth.payload)) {
-      throw new Error(errorMessage ?? "Requires User Authentiction");
+      throw new ApolloError(
+        errorMessage ?? "Requires User Authentiction",
+        "UNAUTHORIZED"
+      );
     }
   }
 };

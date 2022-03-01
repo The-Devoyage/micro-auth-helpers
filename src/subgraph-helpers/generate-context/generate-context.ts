@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { Context } from "src/types";
+import { Context } from "../../types";
 
 export const GenerateContext = (params: {
   req: Request;

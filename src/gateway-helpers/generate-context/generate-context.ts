@@ -1,4 +1,4 @@
-import { Context, GenerateGatewayContextParams } from "src/types";
+import { Context, GenerateGatewayContextParams } from "../../types";
 import { Headers } from "./headers";
 
 export const GenerateContext = async (
