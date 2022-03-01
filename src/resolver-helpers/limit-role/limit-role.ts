@@ -1,3 +1,5 @@
+import { ApolloError } from "apollo-server-errors";
+
 export const LimitRole = (options: {
   userRole?: number;
   roleLimit?: number;
@@ -7,9 +9,11 @@ export const LimitRole = (options: {
 
   if (userRole !== 1) {
     if (userRole > roleLimit)
-      throw new Error(
-        `Permission denied. ${errorMessage ??
-          'You are not authorized to view/edit these details.'}`
+      throw new ApolloError(
+        `Permission denied. ${
+          errorMessage ?? "You are not authorized to view/edit these details."
+        }`,
+        "UNAUTHORIZED"
       );
   }
 };
