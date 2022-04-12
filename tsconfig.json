@@ -12,10 +12,11 @@
     "moduleResolution": "node",
     "sourceMap": true
   },
-  
   "include": [
     "src",
     "src/types/index.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

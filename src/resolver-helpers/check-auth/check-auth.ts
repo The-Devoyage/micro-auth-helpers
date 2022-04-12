@@ -15,7 +15,7 @@ export const CheckAuth = (options: {
       "UNAUTHENTICATED"
     );
 
-  if (requireAccount && context.auth.payload) {
+  if (requireAccount) {
     if (!("account" in context.auth.payload)) {
       throw new ApolloError(
         errorMessage ?? "Requires Account.",
@@ -24,8 +24,8 @@ export const CheckAuth = (options: {
     }
   }
 
-  if (requireUser && context.auth.payload) {
-    if (!("user" in context.auth.payload)) {
+  if (requireUser) {
+    if (!("user" in context.auth.payload) || !context.auth.payload.user) {
       throw new ApolloError(
         errorMessage ?? "Requires User Authentiction",
         "UNAUTHORIZED"
