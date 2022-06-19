@@ -3,12 +3,12 @@ import jwt from "jsonwebtoken";
 
 export const GenerateToken = (params: {
   payload: Payload;
-  secretOrPublicKey: jwt.Secret;
+  secretOrPrivateKey: jwt.Secret;
   options?: jwt.SignOptions;
 }) => {
-  const { payload, secretOrPublicKey, options } = params;
+  const { payload, secretOrPrivateKey, options } = params;
 
-  const token = jwt.sign(payload, secretOrPublicKey, options);
+  const token = jwt.sign(payload, secretOrPrivateKey, options);
 
   return token;
 };
